@@ -1,6 +1,8 @@
 #!/usr/bin/env yavascript
 ///<reference path="./yavascript.d.ts" />
 
+cd(__dirname);
+
 import * as std from "quickjs:std";
 
 function say(phrase: string) {
@@ -9,14 +11,14 @@ function say(phrase: string) {
     "polly",
     "synthesize-speech",
     "--output-format",
-    "mp3",
+    "ogg_vorbis",
     "--voice-id",
     "Ivy",
     "--text",
     phrase,
-    "out.mp3",
+    "out.ogg",
   ]);
-  $(["ffplay", "-autoexit", "-nodisp", "out.mp3"]);
+  $(["ffplay", "-autoexit", "-nodisp", "out.ogg"]);
 }
 
 while (true) {
