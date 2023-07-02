@@ -3,8 +3,6 @@
 
 cd(__dirname);
 
-import * as std from "quickjs:std";
-
 function say(phrase: string) {
   $([
     "aws",
@@ -21,9 +19,4 @@ function say(phrase: string) {
   $(["ffplay", "-autoexit", "-nodisp", "out.ogg"]);
 }
 
-while (true) {
-  const line = std.in.getline();
-  if (line == null) break;
-
-  say(line);
-}
+new InteractivePrompt(say).start();
