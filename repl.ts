@@ -19,4 +19,9 @@ function say(phrase: string) {
   $(["ffplay", "-autoexit", "-nodisp", "out.ogg"]);
 }
 
-new InteractivePrompt(say).start();
+new InteractivePrompt((msg) => {
+  if (msg.trim() === "") {
+    return;
+  }
+  say(msg);
+}).start();
