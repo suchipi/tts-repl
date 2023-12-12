@@ -28,9 +28,4 @@ function say(phrase: string) {
   last = phrase;
 }
 
-new InteractivePrompt((msg) => {
-  if (msg.trim() === "") {
-    return;
-  }
-  say(msg);
-}).start();
+new InteractivePrompt(say).start();
