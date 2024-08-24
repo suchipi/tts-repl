@@ -3,6 +3,9 @@
 
 cd(__dirname);
 
+// Hide exec log output
+logger.info = () => {};
+
 let last = "";
 
 function say(phrase: string) {
