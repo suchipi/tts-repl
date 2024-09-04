@@ -3110,6 +3110,15 @@ interface RegExpConstructor {
   escape(str: any): string;
 }
 
+interface StringConstructor {
+  // From https://www.npmjs.com/package/string-dedent
+  dedent(str: string): string;
+  dedent(str: TemplateStringsArray, ...substitutions: unknown[]): string;
+  dedent<A extends unknown[], R, T>(
+    tag: (this: T, strings: TemplateStringsArray, ...substitutions: A) => R
+  ): (this: T, strings: TemplateStringsArray, ...substitutions: A) => R;
+}
+
 // prettier-ignore
 /** Any integer in the range [0, 255]. */
 declare type byte =
@@ -4039,6 +4048,33 @@ interface BigDecimal {
 // TypeScript will not understand or handle unary/binary operators for BigFloat
 // and BigDecimal properly.
 
+/**
+ * Print the arguments separated by spaces and a trailing newline.
+ *
+ * Non-string args are coerced into a string via [ToString](https://tc39.es/ecma262/#sec-tostring).
+ * Objects can override the default `ToString` behavior by defining a `toString` method.
+ */
+declare var print: (...args: Array<any>) => void;
+
+/**
+ * Object that provides functions for logging information.
+ */
+interface Console {
+  /** Same as {@link print}(). */
+  log: typeof print;
+
+  /** Same as {@link print}(). */
+  warn: typeof print;
+
+  /** Same as {@link print}(). */
+  error: typeof print;
+
+  /** Same as {@link print}(). */
+  info: typeof print;
+}
+
+declare var console: Console;
+
 /** npm: @suchipi/print@2.5.0. License: ISC */
 /* (with some QuickJS-specific modifications) */
 
@@ -4184,39 +4220,17 @@ declare interface InspectCustomInputs {
   colours: { [Key in keyof Required<InspectColours>]: string };
 }
 
+declare type Interval = { [Symbol.toStringTag]: "Interval" };
+
+declare function setInterval(func: (...args: any) => any, ms: number): Interval;
+declare function clearInterval(interval: Interval): void;
+
 // Definitions of the globals and modules added by quickjs-libc
 
 /**
  * Provides the command line arguments. The first argument is the script name.
  */
 declare var scriptArgs: Array<string>;
-
-/**
- * Print the arguments separated by spaces and a trailing newline.
- *
- * Non-string args are coerced into a string via [ToString](https://tc39.es/ecma262/#sec-tostring).
- * Objects can override the default `ToString` behavior by defining a `toString` method.
- */
-declare var print: (...args: Array<any>) => void;
-
-/**
- * Object that provides functions for logging information.
- */
-interface Console {
-  /** Same as {@link print}(). */
-  log: typeof print;
-
-  /** Same as {@link print}(). */
-  warn: typeof print;
-
-  /** Same as {@link print}(). */
-  error: typeof print;
-
-  /** Same as {@link print}(). */
-  info: typeof print;
-}
-
-declare var console: Console;
 
 /** An object representing a file handle. */
 declare interface FILE {
@@ -5223,55 +5237,6 @@ declare module "quickjs:os" {
 declare var setTimeout: typeof import("quickjs:os").setTimeout;
 declare var clearTimeout: typeof import("quickjs:os").clearTimeout;
 
-declare type Interval = { [Symbol.toStringTag]: "Interval" };
-
-declare function setInterval(func: (...args: any) => any, ms: number): Interval;
-declare function clearInterval(interval: Interval): void;
-
-interface StringConstructor {
-  /**
-   * Remove leading minimum indentation from the string.
-   * The first line of the string must be empty.
-   *
-   * https://github.com/tc39/proposal-string-dedent
-   */
-  dedent: {
-    /**
-     * Remove leading minimum indentation from the string.
-     * The first line of the string must be empty.
-     *
-     * https://github.com/tc39/proposal-string-dedent
-     */
-    (input: string): string;
-
-    /**
-     * Remove leading minimum indentation from the template literal.
-     * The first line of the string must be empty.
-     *
-     * https://github.com/tc39/proposal-string-dedent
-     */
-    (
-      strings: readonly string[] | ArrayLike<string>,
-      ...substitutions: any[]
-    ): string;
-
-    /**
-     * Wrap another template tag function such that tagged literals
-     * become dedented before being passed to the wrapped function.
-     *
-     * https://www.npmjs.com/package/string-dedent#usage
-     */
-    <
-      Func extends (
-        strings: readonly string[] | ArrayLike<string>,
-        ...substitutions: any[]
-      ) => string
-    >(
-      input: Func
-    ): Func;
-  };
-}
-
 /**
  * An object which lets you configure the module loader (import/export/require).
  * You can change these properties to add support for importing new filetypes.
@@ -5627,9 +5592,6 @@ declare module "quickjs:context" {
 
       /** Enables `String.prototype.normalize`. Defaults to `true`. */
       stringNormalize?: boolean;
-
-      /** Enables `String.dedent`. Defaults to `true`. */
-      stringDedent?: boolean;
 
       /** Enables `RegExp`. Defaults to `true`. */
       regExp?: boolean;
