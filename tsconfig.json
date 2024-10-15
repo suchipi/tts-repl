@@ -1,0 +1,17 @@
+{
+  "include": ["./**/*.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true,
+
+    "target": "ES2022",
+    "module": "ES2020",
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false
+  }
+}
